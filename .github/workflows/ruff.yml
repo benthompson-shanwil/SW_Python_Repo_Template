@@ -23,10 +23,10 @@ jobs:
     - name: Get diff of main and current branch
       run: |
         echo 'BRANCH NAME: ${{ github.base_ref || github.ref_name }}'
-        echo "DIFF=$(git diff --name-only origin/main ${{ github.base_ref || github.ref_name }} | grep -E '(.py$|.pyi$|.ipynb$)' | tr '\n' ' ' || echo '0')" >> $GITHUB_ENV
+        echo "DIFF=$(git diff --name-only origin/main ${{ github.base_ref || github.ref_name }} | grep -E '(.py$|.pyi$|.ipynb$)' | tr '\n' ' ' || echo '')" >> $GITHUB_ENV
         echo 'CHANGED FILES'
         echo $DIFF
     - name: Analyze the code with Ruff
-      if: ${{ env.DIFF != '0' }}
+      if: ${{ env.DIFF != '' }}
       run: |
         ruff check --output-format=github $DIFF
