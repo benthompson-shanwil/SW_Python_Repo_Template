@@ -7,13 +7,11 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-#       CHANGE VERSION AS NEEDED
         python-version: ["3.9"]
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-#       required, or else git diff can only pull from the most recent commit
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -25,15 +23,9 @@ jobs:
     - name: Get diff of main and current branch
       run: |
         echo 'BRANCH NAME: ${{ github.base_ref || github.ref_name }}'
-#       Gets the current branch name
         echo "DIFF=$(git diff --name-only origin/main ${{ github.base_ref || github.ref_name }} | grep -E '(.py$|.pyi$|.ipynb$)' | tr '\n' ' ' || echo '')" >> $GITHUB_ENV
-#       Gets the diff of the current branch and main branch.
-#       Only retrives python files.
-#       Requires the replacing of new lines as bash can not handle multiline commands well.
-#       If no python files are found in the diff, DIFF environment var is assigned to an empty string.
     - name: Analyze the code with Ruff
       if: ${{ env.DIFF != '' }}
-#     Only run the action if there are changed python files within this branch
       run: |
         echo 'CHANGED PY FILES:' $DIFF
         ruff check --output-format=github $DIFF
