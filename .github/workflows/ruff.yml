@@ -3,7 +3,7 @@ name: Ruff
 on: [push]
 
 jobs:
-  build:
+  ruff:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,5 +27,5 @@ jobs:
     - name: Analyze the code with Ruff
       if: ${{ env.DIFF != '' }}
       run: |
-        echo 'CHANGED FILES:' $DIFF
+        echo 'CHANGED PY FILES:' $DIFF
         ruff check --output-format=github $DIFF
