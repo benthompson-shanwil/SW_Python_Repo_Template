@@ -9,7 +9,7 @@ preview = true
 select = ['ALL']
 dummy-variable-rgx = "^_$"
 ignore = ['PLR0917', 'PLR2004', 'D200', 'D202', 'D203', 'D205', 'D212', 'D300', 'D400', 'D401', 'D404', 'DOC201', 'DOC501',
-    'ANN003', 'TRY003', 'FBT002', 'D413', 'COM812', 'ISC001', 'CPY001']
+    'ANN003', 'TRY003', 'FBT001', 'FBT002', 'D413', 'COM812', 'ISC001', 'CPY001', 'RUF013', 'S608']
 
 # PLR0917 -- Detects too many position arguments (for function calls) but incorrectly detects function signatures.
 # PLR2004 -- Detects 'magic values' e.g. constants. Can be useful, but too broad.
@@ -28,11 +28,16 @@ ignore = ['PLR0917', 'PLR2004', 'D200', 'D202', 'D203', 'D205', 'D212', 'D300', 
 # DOC501 -- Raised exception missing from docstring. Doesn't properly support the docstring format we use.
 # ANN003 -- Requires type declaration for kwargs. Always going to be a dict, so whats the point?
 # TRY003 -- Requires exception messages to be declared in the exception class. Seems excessive.
+# FBT001 -- If a function has a boolean argument with a default value, it wants us to split it
+# into seperate functions. Not the standard that we use, or Numpy, or even matplotlib.
 # FBT002 -- If a function has a boolean argument with a default value, it wants us to split it
 # into seperate functions. Not the standard that we use, or Numpy, or even matplotlib.
 # COM812 -- Missing trailing comma. Not the standard we use.
 # ISC001 -- Two strings are concatenated implicitly on the same line. Can cause issues with Ruff formatter.
 # CPY001 -- Ensures that a copyright notice is at the top of every file. We may want this eventually.
+# RUF013 -- Prohibits implicit Optional, e.g. requires Optional[list] = None. Too verbose and causes issues.
+# S608 -- Detects hardcoded SQL statements. Supposed to prevent SQL injection, but it is too liberal
+# with flagging.
 
 [tool.ruff.format]
 quote-style = "single"
@@ -40,9 +45,10 @@ skip-magic-trailing-comma = true
 
 [tool.ruff.lint.pylint]
 max-args = 30
+max-locals = 30
 
 [tool.ruff.lint.mccabe]
-max-complexity = 15
+max-complexity = 30
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"
